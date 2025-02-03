@@ -1,0 +1,173 @@
+Using JavaFX (Java 8 and later)
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+public class JNLPApplet extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        TextField urlField = new TextField();
+        urlField.setPromptText("Enter JNLP URL");
+
+        Button launchButton = new Button("Launch");
+        launchButton.setOnAction(event -> {
+            String url = urlField.getText();
+            if (url.isEmpty()) {
+                System.out.println("Please enter a URL");
+                return;
+            }
+
+            try {
+                URI uri = new URI(url);
+                Desktop.getDesktop().browse(uri);
+            } catch (URISyntaxException | IOException ex) {
+                System.out.println("Error launching JNLP: " + ex.getMessage());
+            }
+        });
+
+        VBox root = new VBox(10);
+        root.getChildren().addAll(urlField, launchButton);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(10));
+
+        Scene scene = new Scene(root, 300, 100);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("JNLP Applet");
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+Using Electron (JavaScript, HTML, and CSS)
+
+Create a new directory for your project and install the required dependencies:
+
+npm init -y
+npm install electron
+
+Create a file named index.html:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>JNLP Applet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <input id="url" type="text" placeholder="Enter JNLP URL">
+    <button id="launch">Launch</button>
+    <script src="script.js"></script>
+</body>
+</html>
+
+Create a file named script.js:
+
+const { shell } = require('electron');
+
+document.getElementById('launch').addEventListener('click', () => {
+    const url = document.getElementById('url').value;
+    if (url === '') {
+        console.log('Please enter a URL');
+        return;
+    }
+
+    shell.openExternal(url);
+});
+
+Create a file named main.js:
+
+const { app, BrowserWindow } = require('electron');
+
+let win;
+
+function createWindow() {
+    win = new BrowserWindow({
+        width: 300,
+        height: 100,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+
+    win.loadFile('index.html');
+    win.on('closed', () => {
+        win = null;
+    });
+}
+
+app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+    if (process.platform!== 'darwin') {
+        app.quit();
+    }
+});
+
+app.on('activate', () => {
+    if (win === null) {
+        createWindow();
+    }
+});
+
+Run the application using:
+
+electron.
+
+Using Python (with tkinter for GUI)
+
+import tkinter as tk
+from tkinter import messagebox
+import webbrowser
+
+class JNLPApplet:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("JNLP Applet")
+
+        self.url_label = tk.Label(self.root, text="Enter JNLP URL:")
+        self.url_label.pack()
+
+        self.url_entry = tk.Entry(self.root)
+        self.url_entry.pack()
+
+        self.launch_button = tk.Button(self.root, text="Launch", command=self.launch_jnlp)
+        self.launch_button.pack()
+
+    def launch_jnlp(self):
+        url = self.url_entry.get()
+        if url == "":
+            messagebox.showerror("Error", "Please enter a URL")
+            return
+
+        webbrowser.open(url)
+
+    def run(self):
+        self.root.mainloop()
+
+if __name__ == "__main__":
+    app = JNLPApplet()
+    app.run()
+
+Run the application using:
+
+python jnlp_applet.py
